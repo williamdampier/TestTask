@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: testtask
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d testtask"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    working_dir: /src
+    volumes:
+      - ./:/src
+    ports:
+      - "8090:8090"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=testtask;Username=postgres;Password=postgres"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "dotnet restore &&
+             dotnet build &&
+             dotnet run --no-build --urls http://0.0.0.0:8090"
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_REPLACE_SERVERS_ON_STARTUP: "True"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGPASS_FILE: /pgadmin4/pgpass
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+      - ./pgpass:/pgadmin4/pgpass
+
+volumes:
+  postgres_data:

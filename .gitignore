@@ -1,0 +1,31 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build output
+bin/
+obj/
+
+# Test results
+TestResults/
+
+# User-specific files
+*.user
+*.rsuser
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# ASP.NET Core
+appsettings.Development.json
+
+# Docker
+docker-compose.override.yml
+
+# OS
+.DS_Store
+Thumbs.db

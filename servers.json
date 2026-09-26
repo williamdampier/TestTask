@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "TestTask PostgreSQL",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "testtask",
+      "Username": "postgres",
+      "Password": "postgres",
+      "SSLMode": "prefer",
+      "PassFile": "/var/lib/pgadmin/.pgpass"
+    }
+  }
+}
