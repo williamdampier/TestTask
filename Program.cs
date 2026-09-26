@@ -38,8 +38,6 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "api/swagger";
 });
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
